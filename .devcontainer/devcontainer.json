@@ -1,0 +1,37 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.101.1/containers/java-8
+{
+	"name": "Alfresco Annotations",
+	"dockerFile": "Dockerfile",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"terminal.integrated.shell.linux": "/usr/bin/fish",
+		"java.home": "/docker-java-home"
+	},
+	
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"vscjava.vscode-java-pack"
+	],
+	
+	// Create maven cahce folder if not exist
+	// Required if you wanr to rebuild devcontainer and
+	// not want download all libraris
+	"initializeCommand": "mkdir -p ~/.m2",
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [8080],
+
+	"mounts": [
+		"source=${localEnv:HOME}/.m2,target=/home/developer/.m2,type=bind,consistency=cached", // Mount ssh keys for git
+		"source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh,type=bind,consistency=cached", // Mount ssh keys for git
+		"source=${localEnv:HOME}/.gitconfig,target=/home/developer/.gitconfig,type=bind,consistency=cached" // Mount git global configuration
+	],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "mvn clean",
+
+	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "developer"
+}
