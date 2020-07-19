@@ -1,0 +1,9 @@
+<settings>
+    <servers>
+        <server>
+            <id>nexus-dbt</id>
+            <username>${NEXUS_USER_NAME}</username>
+            <password>${NEXUS_USER_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>

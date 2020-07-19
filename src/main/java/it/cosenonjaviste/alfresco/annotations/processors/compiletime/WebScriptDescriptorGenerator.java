@@ -28,6 +28,7 @@ import java.util.Set;
 
 /**
  * @author Andrea Como
+ * @author Sergey Klimchuk
  */
 @SupportedAnnotationTypes("it.cosenonjaviste.alfresco.annotations.WebScriptDescriptor")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -36,12 +37,14 @@ public class WebScriptDescriptorGenerator extends AbstractProcessor {
     private ProcessLog log;
 
     private ResourceWriter resourceWriter;
+    private ResourceWriter tempalteWriter;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         this.log = new ProcessLog(processingEnv);
         this.resourceWriter = new WebScriptDescriptorWriter(processingEnv);
+        this.tempalteWriter = new WebScriptDescriptorTemplateWriter(processingEnv);
     }
 
     @Override
@@ -67,8 +70,16 @@ public class WebScriptDescriptorGenerator extends AbstractProcessor {
 
         String name = extractWebScriptName(webScriptAnnotation.value());
         String path = extractWebScriptPath(webScriptAnnotation.value());
-        String descName = name + "." + webScriptAnnotation.method().toString().toLowerCase() + ".desc.xml";
+        String method = webScriptAnnotation.method().toString().toLowerCase();
+        String descName = name + "." + method + ".desc.xml";
         this.resourceWriter.generateResourceFile(descriptor, descName, path);
+
+        // Write default template
+        if (!descriptor.useCustomTemplate()) {
+            String format = descriptor.format().toString().toLowerCase();
+            String tempalteName = name + "." + method + "." + format + ".ftl";
+            tempalteWriter.generateResourceFile(descriptor, tempalteName, path);
+        }
     }
 
     private String extractWebScriptPath(String value) {

@@ -28,6 +28,7 @@ import java.lang.annotation.*;
  * Must be used with {@link WebScript}
  *
  * @author Andrea Como
+ * @author Sergey Klimchuk
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -102,4 +103,11 @@ public @interface WebScriptDescriptor {
      * @return transaction level
      */
     TransactionType transaction() default TransactionType.DEFAULT;
+
+    /**
+     * Use custom ftl template for responses
+     *
+     * @return feature state
+     */
+    boolean useCustomTemplate() default false;
 }
